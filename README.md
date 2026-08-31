@@ -2,30 +2,30 @@
 
 > Write it once. Hear it everywhere.
 
-LinguaTale is an AI-powered multilingual storytelling platform that transforms written stories into expressive audio experiences across multiple languages.
+LinguaTale is an AI-powered multilingual storytelling platform.
 
-## Architecture
-
-The initial architecture is documented in [`docs/architecture/LinguaTale_Architecture.md`](docs/architecture/LinguaTale_Architecture.md).
-
-## Planned platform
+## Current architecture
 
 - Flutter mobile application
-- Java or C# business backend
-- Python AI orchestration layer
-- Translation and text-to-speech provider adapters
-- Asynchronous processing with a message queue
-- Database for application metadata
-- Object storage for generated audio and media
-- Real-time processing progress
-- CI/CD and cloud-ready infrastructure
+- Java 21 Spring Boot API
+- MySQL persistence through stored procedures only
+- RabbitMQ asynchronous generation jobs
+- Python FastAPI AI orchestration/worker
+- OpenAI-backed story analysis, translation and TTS adapters
+- S3-compatible object storage for generated audio
 
-## Initial scope
+## Local infrastructure
 
-1. Create and edit stories
-2. Translate stories into selected languages
-3. Generate narrated audio
-4. Play and download generated audio
-5. Track asynchronous generation jobs
+```bash
+docker compose up -d
+```
 
-The repository is intentionally being established in small, reviewable increments so the MVP remains maintainable while preserving room for future character voices, scenes, music, sound effects, subtitles, illustrations, and audiobook generation.
+Set `OPENAI_API_KEY` and run the Java and Python services. Database procedures are under `database/mysql/` and are loaded automatically by the MySQL container on first initialization.
+
+## Database rule
+
+Java application code must not contain inline SQL for application CRUD. Database access is performed through named MySQL stored procedures. Schema/procedure definitions are versioned under `database/mysql/`.
+
+## Product
+
+Create one story, translate it into multiple languages, generate expressive narration, and store the resulting audio for playback and download.

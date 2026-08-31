@@ -1,0 +1,48 @@
+CREATE DATABASE IF NOT EXISTS linguatale CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE linguatale;
+
+CREATE TABLE IF NOT EXISTS stories (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    content LONGTEXT NOT NULL,
+    source_language VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
+);
+
+CREATE TABLE IF NOT EXISTS generation_jobs (
+    id VARCHAR(36) PRIMARY KEY,
+    story_id BIGINT NOT NULL,
+    target_language VARCHAR(10) NOT NULL,
+    voice VARCHAR(100) NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    progress INT NOT NULL DEFAULT 0,
+    error_message TEXT NULL,
+    audio_key VARCHAR(500) NULL,
+    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    CONSTRAINT fk_generation_story FOREIGN KEY (story_id) REFERENCES stories(id)
+);
+
+CREATE TABLE IF NOT EXISTS translations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    story_id BIGINT NOT NULL,
+    language VARCHAR(10) NOT NULL,
+    content LONGTEXT NOT NULL,
+    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    UNIQUE KEY uq_story_language (story_id, language),
+    CONSTRAINT fk_translation_story FOREIGN KEY (story_id) REFERENCES stories(id)
+);
+
+CREATE TABLE IF NOT EXISTS audio_assets (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    job_id VARCHAR(36) NOT NULL,
+    story_id BIGINT NOT NULL,
+    language VARCHAR(10) NOT NULL,
+    storage_key VARCHAR(500) NOT NULL,
+    content_type VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    CONSTRAINT fk_audio_job FOREIGN KEY (job_id) REFERENCES generation_jobs(id),
+    CONSTRAINT fk_audio_story FOREIGN KEY (story_id) REFERENCES stories(id)
+);
