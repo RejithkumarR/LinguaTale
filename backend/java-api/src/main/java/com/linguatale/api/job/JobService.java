@@ -20,4 +20,10 @@ public class JobService {
     public GenerationJob get(String id) { return repository.get(id).orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Job not found")); }
     public void updateStatus(String id, String state, int progress, String error) { repository.status(id, state, progress, error); }
     public void saveAudio(String id, long storyId, String language, String key, String contentType) { repository.audio(id, storyId, language, key, contentType); }
+    public GenerationJob retry(String id) {
+        GenerationJob job = get(id);
+        repository.status(id, "QUEUED", 0, null);
+        publisher.publish(id);
+        return get(id);
+    }
 }
