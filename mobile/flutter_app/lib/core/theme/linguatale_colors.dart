@@ -33,13 +33,12 @@ abstract final class LinguaTaleTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: LinguaTaleColors.surface,
-      fontFamily: 'Poppins',
       appBarTheme: const AppBarTheme(
         backgroundColor: LinguaTaleColors.white,
         foregroundColor: LinguaTaleColors.deepNavy,
         elevation: 0,
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: LinguaTaleColors.white,
         elevation: 1,
         shape: RoundedRectangleBorder(
