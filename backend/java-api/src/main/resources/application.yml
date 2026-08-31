@@ -1,16 +1,22 @@
 spring:
   application:
     name: linguatale-api
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/linguatale?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${MYSQL_USERNAME:linguatale}
+    password: ${MYSQL_PASSWORD:linguatale}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 server:
-  port: 8080
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
+  port: ${SERVER_PORT:8080}
 
 linguatale:
+  queue:
+    generation: ${GENERATION_QUEUE:linguatale.generation}
   ai:
-    base-url: ${LINGUATALE_AI_BASE_URL:http://localhost:8000}
+    callback-secret: ${AI_CALLBACK_SECRET:change-me}
