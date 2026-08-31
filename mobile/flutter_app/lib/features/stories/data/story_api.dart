@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../core/network/api_client.dart';
-import '../stories/domain/entities/story.dart';
+import '../../../core/network/api_client.dart';
+import '../domain/entities/story.dart';
 
 class StoryApi {
   final ApiClient client;
